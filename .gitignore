@@ -1,0 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup
+backup/
+
+# File hasil export
+export/
+
+# Environment
+.env
+.venv/
+venv/
+
+# VS Code
+.vscode/
