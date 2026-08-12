@@ -25,7 +25,8 @@ KATEGORI_KELUAR = {
     "1" : "Makan",
     "2" : "Transportasi",
     "3" : "Kuota",
-    "4" : "Lainnya"
+    "4" : "Beli",
+    "5" : "Lainnya"
 }
 
 WARNA_MASUK = "C6E0B4"

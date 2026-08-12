@@ -11,7 +11,7 @@ from utils import header, keluar
 from database import conn
 from backup import *
 from cari_transaksi import cari_transaksi
-
+from parser import parse_pesan
 while True:
     header("keuangan")
 
@@ -26,6 +26,7 @@ while True:
 8. cari transaksi
 9. backup database
 10. restore database
+11. parser pesan
 0. keluar
 """)
     
@@ -62,6 +63,10 @@ while True:
 
     elif menu == '10':
       restore_database()
+
+    elif menu == '11':
+      pesan = input("Pesan : ")
+      parse_pesan(pesan)
 
     elif menu == '0':
       keluar()

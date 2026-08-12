@@ -9,6 +9,14 @@ def header(judul):
    print(judul.center(75))
    print("=" * 75)
 
+def ambil_saldo():
+  cursor.execute('''
+SELECT COALESCE(SUM(jumlah), 0)
+FROM transaksi_keuangan
+''')
+  saldo = cursor.fetchone()[0]
+  return saldo
+
 def tampilkan_saldo():
      cursor.execute("SELECT SUM(jumlah) FROM transaksi_keuangan")
      total_saldo = cursor.fetchone()[0]

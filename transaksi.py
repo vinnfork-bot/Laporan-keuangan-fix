@@ -55,6 +55,14 @@ def input_transaksi():
    keterangan = input("KETERANGAN : ")
    return jenis, kategori, keterangan, jumlah
 
+def simpan_transaksi(jenis, kategori, keterangan, jumlah):
+   cursor.execute('''
+INSERT INTO transaksi_keuangan(jenis, kategori, keterangan, jumlah)
+VALUES(?, ?, ?, ?)
+''', (jenis, kategori, keterangan, jumlah))
+   conn.commit()
+   return cursor.lastrowid
+
 def simpan_data():
   header("TRANSAKSI BARU")
   hasil = input_transaksi()
@@ -63,13 +71,16 @@ def simpan_data():
      return 
   jenis, kategori, keterangan, jumlah = hasil
 
-  cursor.execute('''
-    INSERT INTO transaksi_keuangan(jenis, kategori, keterangan, jumlah)
-    VALUES(?, ?, ?, ?)
- ''', (jenis, kategori, keterangan, jumlah))
-  header("DATA DISIMPAN")
-  conn.commit()
+  id_transaksi = simpan_transaksi(
+       jenis,
+       kategori,
+       keterangan,
+       jumlah
+    )
+  print(f"id transaksi : {id_transaksi}")
+     
 
+  header("DATA DISIMPAN")
 
 def format_data(rows):
    data = []
