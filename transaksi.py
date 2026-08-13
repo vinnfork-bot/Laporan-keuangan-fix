@@ -8,6 +8,7 @@ from config import (
     JENIS_MASUK
     )
 from tabulate import tabulate
+from laporan import tampilkan_saldo
 
 def pilih_kategori(data):
    for kode, nama in data.items():
@@ -55,11 +56,11 @@ def input_transaksi():
    keterangan = input("KETERANGAN : ")
    return jenis, kategori, keterangan, jumlah
 
-def simpan_transaksi(jenis, kategori, keterangan, jumlah):
+def simpan_transaksi(user_id, jenis, kategori, keterangan, jumlah):
    cursor.execute('''
-INSERT INTO transaksi_keuangan(jenis, kategori, keterangan, jumlah)
-VALUES(?, ?, ?, ?)
-''', (jenis, kategori, keterangan, jumlah))
+INSERT INTO transaksi_keuangan(user_id, jenis, kategori, keterangan, jumlah)
+VALUES(?, ?, ?, ?, ?)
+''', (user_id, jenis, kategori, keterangan, jumlah))
    conn.commit()
    return cursor.lastrowid
 
@@ -96,8 +97,13 @@ def format_data(rows):
          ])
    return data
 
-def tampilkan_data():
-   cursor.execute('SELECT id, jenis, kategori, keterangan, jumlah, tanggal FROM transaksi_keuangan')
+def tampilkan_data(user_id):
+   cursor.execute('''
+   SELECT id, user_id, jenis, kategori, keterangan, jumlah, tanggal 
+   FROM transaksi_keuangan
+   WHERE user_id = ?
+   ORDER BY tanggal DESC, id DESC
+   ''',(user_id,))
    rows = cursor.fetchall()
 
    data = format_data(rows)
@@ -114,15 +120,15 @@ def tampilkan_menu(data):
                tanggal      :  {data[5]}
                """)
 
-def edit():
+def edit(user_id):
    try:
     id_edit = int(input("Masukkan id : "))
 
    except ValueError:
       print("INPUT BERUPAA ANGKA!")
       return
-   cursor.execute('SELECT * FROM transaksi_keuangan WHERE id = ?',
-                  (id_edit,))
+   cursor.execute('SELECT * FROM transaksi_keuangan WHERE id = ? AND user_id=?,'
+                  (id_edit, user_id,))
 
    data = cursor.fetchone()
    
@@ -137,7 +143,7 @@ def edit():
       
       if hasil is None:
            return 
-      jenis, kategori, keterangan, jumlah = hasil
+      user_id, jenis, kategori, keterangan, jumlah = hasil
       
    cursor.execute('''
             UPDATE transaksi_keuangan
@@ -145,9 +151,9 @@ def edit():
              kategori=?,
              keterangan=?,
              jumlah=?
-         WHERE id=?
+         WHERE user_id =?
       ''',
-     (jenis, kategori, keterangan, jumlah, id_edit))      
+     (user_id, jenis, kategori, keterangan, jumlah, id_edit))      
    conn.commit()
    print("Data berhasil diubah!!!")
 

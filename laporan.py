@@ -9,16 +9,23 @@ def header(judul):
    print(judul.center(75))
    print("=" * 75)
 
-def ambil_saldo():
-  cursor.execute('''
+def ambil_saldo(user_id):
+  cursor.execute("""
 SELECT COALESCE(SUM(jumlah), 0)
-FROM transaksi_keuangan
-''')
+FROM transaksi_keuangan,
+WHERE user_id = ?
+""", (user_id,))
   saldo = cursor.fetchone()[0]
   return saldo
 
-def tampilkan_saldo():
-     cursor.execute("SELECT SUM(jumlah) FROM transaksi_keuangan")
+def tampilkan_saldo(user_id):
+     
+     cursor.execute("""
+          SELECT COALESCE SUM(jumlah)
+          FROM transaksi_keuangan
+          WHERE user_id = ?
+          """,(user_id,)
+          )
      total_saldo = cursor.fetchone()[0]
      if total_saldo is None:
          total_saldo =0
@@ -28,7 +35,7 @@ def tampilkan_saldo():
      print(" ")
      print("=" * 75)
 
-def rekap_bulanan():
+def rekap_bulanan(user_id):
    header("Rekapan bulanan")
    try:
      bulan = input("Masukkan bulan : ")
@@ -50,11 +57,12 @@ def rekap_bulanan():
    print("\n \nmencari transaksi bulan ",(bulan)," pada tahun ",(tahun))
 
    cursor.execute("""
-                 SELECT *
-                 FROM transaksi_keuangan
-                 WHERE strftime('%m', tanggal) = ?
-                 AND strftime('%Y', tanggal) = ?
-                 """,(bulan, tahun))
+    SELECT id, jenis, kategori, keterangan, jumlah, tanggal
+    FROM transaksi_keuangan
+    WHERE strftime('%m', tanggal) = ?
+    AND strftime('%Y', tanggal) = ?
+    AND user_id = ?
+""", (bulan, tahun, user_id))
 
    hasil = cursor.fetchall()
 
@@ -64,10 +72,10 @@ def rekap_bulanan():
    data = format_data(rows=hasil)
 
    for row in hasil:
-       if row[1] == "MASUK":
-           total_masuk += row[4]
+       if row[2] == "MASUK":
+           total_masuk += row[5]
        else:
-           total_keluar += abs(row[4])
+           total_keluar += abs(row[5])
 
    print(tabulate(
       data,

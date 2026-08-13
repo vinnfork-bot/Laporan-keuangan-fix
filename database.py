@@ -8,6 +8,7 @@ def buat_tabel():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS transaksi_keuangan(
        id INTEGER PRIMARY KEY AUTOINCREMENT,
+       user_id TEXT NOT NULL,
        jenis TEXT NOT NULL,
        kategori TEXT NOT NULL,
        keterangan TEXT NOT NULL,

@@ -3,7 +3,7 @@ from laporan import ambil_saldo
 from config import *
 from utils import format_rupiah
 
-def parse_pesan(pesan):
+def parse_pesan(pesan, user_id):
     bagian = pesan.split()
 
     kategori_input = bagian[0]
@@ -38,6 +38,7 @@ def parse_pesan(pesan):
       return
     
     simpan_transaksi(
+       user_id,
        jenis,
        kategori,
        keterangan,
@@ -73,3 +74,6 @@ def buat_respon(jenis, kategori, keterangan, jumlah, saldo):
 
 💳 Saldo sekarang: {format_rupiah(saldo)}
 """
+
+def kirim_ke_whatsapp(nomor, pesan):
+  pass
