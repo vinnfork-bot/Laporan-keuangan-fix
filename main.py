@@ -1,8 +1,9 @@
 from transaksi import (
     simpan_data,
-    tampilkan_data,
     edit,
-    hapus_data
+    hapus_data,
+    simpan_transaksi,
+    tampilkan_data
 )
 
 from laporan import rekap_bulanan, tampilkan_saldo
@@ -41,7 +42,7 @@ while True:
 
     elif menu == '3':
       tampilkan_data()
-      tampilkan_saldo()
+      tampilkan_saldo(user_id="CLI")
 
     elif menu == '4':
       edit()

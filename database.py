@@ -1,7 +1,7 @@
 import sqlite3
 from config import DATABASE_NAME
 
-conn = sqlite3.connect(DATABASE_NAME)
+conn = sqlite3.connect(DATABASE_NAME, check_same_thread=False)
 cursor = conn.cursor()
 
 def buat_tabel():

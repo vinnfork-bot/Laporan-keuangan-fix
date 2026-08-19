@@ -1,21 +1,64 @@
 from transaksi import simpan_transaksi
-from laporan import ambil_saldo
+from laporan import ambil_saldo, ambil_riwayat
 from config import *
 from utils import format_rupiah
+from database import cursor
 
 def parse_pesan(pesan, user_id):
+    pesan = pesan.lower().strip()
+
+    if pesan == "hai":
+      return "Hai bozs \nAda yang bisa gw bantu? \nKetik *menu* untuk melihat perintah"
+
+    if pesan == "menu":
+      return """📱MENU KEUANGAN
+      Ketik :
+      -Saldo
+      -Riwayat
+      -Tambah
+      """
+    if pesan == "saldo":
+      saldo = ambil_saldo(user_id)
+      return f"""💳 SALDO ANDA
+      Saldo anda saat ini : 
+      {format_rupiah(saldo)}
+"""
+    if pesan == "riwayat":
+      return ambil_riwayat(user_id)
+
+    if pesan == "tambah":
+      return """TAMBAH TRANSAKSI :
+      format : <kategori> <keterangan> <jumlah>
+      
+      contoh:
+      Makan bakso 15000
+      📥 PEMASUKAN
+- gajian
+- freelance
+
+📤 PENGELUARAN
+- makan
+- transportasi
+- kuota
+- lainnya
+      """
     bagian = pesan.split()
+
+    if len(bagian) < 2:
+      return """format tidak valid
+      ketik *menu* untuk bantuan"""
 
     kategori_input = bagian[0]
     try:
        jumlah = int(bagian[-1])
 
     except ValueError:
-        print("Jumlah tidak valid \ncontoh : \nmakan bakso Rp 10.000")
+        print("Jumlah tidak valid \ncontoh : \nmakan bakso Rp 10.000 \nKetik 'menu' untuk melihat bantuan")
         return
     keterangan = " ".join(bagian[1:-1])
 
     kategori = None
+    jenis = None
 
     for nama in KATEGORI_MASUK.values():
      if kategori_input.lower() == nama.lower():
@@ -32,10 +75,17 @@ def parse_pesan(pesan, user_id):
         break
 
     if kategori is None:
-      print("\nkategori tidak ditemukan")
-      print("kategori yang tersedia :")
-      print("gajian \nfreelance \nmakan \ntransportasi \nkuota \nlainnya")
-      return
+      return """Kategori tidak ditemukan
+      KATEGORI YANG ADA:
+      📥 Pemasukan
+- gajian
+- freelance
+
+📤 Pengeluaran
+- makan
+- transportasi
+- kuota
+- lainnya"""
     
     simpan_transaksi(
        user_id,
@@ -45,7 +95,7 @@ def parse_pesan(pesan, user_id):
        jumlah
     )
 
-    saldo = ambil_saldo()
+    saldo = ambil_saldo(user_id)
 
     respon = buat_respon(
       jenis,
@@ -55,7 +105,7 @@ def parse_pesan(pesan, user_id):
       saldo
     )
 
-    print(respon)
+    return respon
 
 def buat_respon(jenis, kategori, keterangan, jumlah, saldo):
   if jenis == JENIS_MASUK:
@@ -74,6 +124,3 @@ def buat_respon(jenis, kategori, keterangan, jumlah, saldo):
 
 💳 Saldo sekarang: {format_rupiah(saldo)}
 """
-
-def kirim_ke_whatsapp(nomor, pesan):
-  pass

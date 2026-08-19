@@ -22,12 +22,19 @@ pekerjaan dalam membuat laporan data.
 - Grafik pemasukan dan pengeluaran
 - Menyimpan data menggunakan Sqlite
 
+## Fitur pada whatsapp(sementara)
+- Menu
+- Tambah transaksi
+- Lihat riwayat transaksi
+- Lihat saldo
+
 
 ## Teknologi
 - Python
 - SQLite
 - OpenPyXL
 - Tabulate
+- API whatsapp
 
 ## 📁 Struktur Project
 
@@ -44,6 +51,8 @@ APLIKASI KEUANGAN V1.0/
 ├── config.py            # Konfigurasi aplikasi
 ├── utils.py             # Fungsi bantuan
 ├── backup/              # Penyimpanan backup database
+├── parser.py            # Menerima perintah teks
+├── webhook.py           # Menghubungkan ke whatapp
 ├── export/              # Penyimpanan file Excel
 └── README.md            # Dokumentasi project
 
@@ -58,8 +67,14 @@ APLIKASI KEUANGAN V1.0/
 3. Install library
   pip install openpyexcel tabulate
 
-4. Jalankan aplikasi
-  python main.py
+4. Masukkan data
+  - Masukkan nomor telepon
+  - Token
+  - Akses token
+  - Dan url yang diminta
+
+5. Masuk ke whatsapp
+  beri perintah
 
 📊 Export Excel
 Aplikasi dapat membuat laporan transaksi berdasarkan bulan dan tahun.
@@ -95,7 +110,7 @@ Aplikasi ini dibuat sebagai sarana belajar dan pengembangan kemampuan dalam:
  - Problem solving
 
 📌 Status Project
-Version 1.1
+Version 1.2
 Proyek masih dalam tahap pengembangan yang akan dikembangkan lebih lanjut
 
 🔮 Rencana Pengembangan

@@ -12,7 +12,7 @@ def header(judul):
 def ambil_saldo(user_id):
   cursor.execute("""
 SELECT COALESCE(SUM(jumlah), 0)
-FROM transaksi_keuangan,
+FROM transaksi_keuangan
 WHERE user_id = ?
 """, (user_id,))
   saldo = cursor.fetchone()[0]
@@ -24,7 +24,7 @@ def tampilkan_saldo(user_id):
           SELECT COALESCE SUM(jumlah)
           FROM transaksi_keuangan
           WHERE user_id = ?
-          """,(user_id,)
+          """,(user_id)
           )
      total_saldo = cursor.fetchone()[0]
      if total_saldo is None:
@@ -86,3 +86,45 @@ def rekap_bulanan(user_id):
    print("\nTOTAL PEMASUKAN ANDA BULAN INI ADALAH : ", format_rupiah(total_masuk))
    print("\nTOTAL PENGELUARAN ANDA BULAN INI ADALAH : ", format_rupiah(total_keluar))
    print("\nTOTAL SALDO ANDA BULAN INI ADALAH : ", format_rupiah(total_saldo))
+
+def ambil_riwayat(user_id):
+  cursor.execute("""
+SELECT
+jenis,
+kategori,
+keterangan,
+jumlah,
+tanggal
+FROM transaksi_keuangan
+WHERE user_id = ?
+ORDER BY id DESC
+LIMIT 10
+""", (user_id,))
+
+  rows = cursor.fetchall()
+
+  if not rows:
+    return """Tidak ada transaksi"""
+
+  teks = "📋 RIWAYAT TRANSAKSI\n\n"
+
+  for row in rows:
+    jenis = row[0]
+    kategori = row[1]
+    keterangan = row[2]
+    jumlah = row[3]
+    tanggal = row[4]
+
+    if jumlah >= 0:
+      simbol = "📥"
+
+    else:
+       simbol = "📤"
+
+    teks += f"""\n{simbol} {kategori}
+📝 {keterangan}
+💰 {format_rupiah(abs(jumlah))}
+📅 {tanggal}
+"""
+
+  return teks
