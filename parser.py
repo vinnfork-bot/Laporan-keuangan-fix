@@ -1,4 +1,4 @@
-from transaksi import simpan_transaksi
+from transaksi import simpan_transaksi, hapus_data, tampilkan_data, konfirmasi_data
 from laporan import ambil_saldo, ambil_riwayat
 from config import *
 from utils import format_rupiah
@@ -16,6 +16,7 @@ def parse_pesan(pesan, user_id):
       -Saldo
       -Riwayat
       -Tambah
+      -Hapus
       """
     if pesan == "saldo":
       saldo = ambil_saldo(user_id)
@@ -25,6 +26,31 @@ def parse_pesan(pesan, user_id):
 """
     if pesan == "riwayat":
       return ambil_riwayat(user_id)
+
+    if pesan.startswith("hapus"):
+      bagian = pesan.split()
+
+      if len(bagian) != 2:
+        return "❌ Format salah.\nContoh: hapus 3"
+
+      id_hapus = bagian[1]
+
+      return hapus_data(user_id, id_hapus)
+
+    if pesan.startswith("ya"):
+      bagian = pesan.split()
+
+      if len(bagian) != 2:
+        return "Format salah.\nContoh :\nYa 1"
+      id_hapus = bagian[1]
+      return konfirmasi_data(user_id, id_hapus)
+
+    if pesan.startswith("tidak"):
+      bagian = pesan.split()
+
+      if len(bagian) != 2:
+        return "Format salah.\nContoh :\nYa 1"
+      return "Penghapusan transaksi dibatalkan"
 
     if pesan == "tambah":
       return """TAMBAH TRANSAKSI :

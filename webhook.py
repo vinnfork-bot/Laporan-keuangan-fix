@@ -4,14 +4,15 @@ from parser import parse_pesan
 import traceback
 
 app = Flask(__name__)
-VERIFY_TOKEN = "token anda"
+VERIFY_TOKEN = "WBbth-27122009-11122008"
 
-PHONE_NUMBER_ID = "id anda"
+PHONE_NUMBER_ID = "1261514473711832"
 
-ACCESS_TOKEN = "akses token anda"
+ACCESS_TOKEN = "EAAWDjwt7MzEBSbDXiR5nYWOsTmJZBq8wHYVZCZAJ7dQhAObbeQR2XpD5AuYyBNJesYxtkec1ilF41ut5Cki0Bpv2zaQGfdrB5pnEPlquNuwdgZAzQg5zvUXTxOKP489klsKTsjpjAZAqwowZAjcnxtbQGEc5KCOXVYO9N7XSDTFLMfqJBZB78mB2Xnjuy9bllFZB7IhFHlJXji59SZAh9dsaApQMRvELi45hSOB1X7DRIWKp0uhtbcBO4mU97sWYPYVkUM7goQhhv7xxeaF5YOYPjMwZDZD"
+
 def kirim_pesan(nomor, pesan):
 
-    url = f" link anda"
+    url = f"https://graph.facebook.com/v25.0/1261514473711832/messages"
 
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",

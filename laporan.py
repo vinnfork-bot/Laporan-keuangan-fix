@@ -90,6 +90,7 @@ def rekap_bulanan(user_id):
 def ambil_riwayat(user_id):
   cursor.execute("""
 SELECT
+id,
 jenis,
 kategori,
 keterangan,
@@ -109,11 +110,12 @@ LIMIT 10
   teks = "📋 RIWAYAT TRANSAKSI\n\n"
 
   for row in rows:
-    jenis = row[0]
-    kategori = row[1]
-    keterangan = row[2]
-    jumlah = row[3]
-    tanggal = row[4]
+    id_transaksi = row[0]
+    jenis = row[1]
+    kategori = row[2]
+    keterangan = row[3]
+    jumlah = row[4]
+    tanggal = row[5]
 
     if jumlah >= 0:
       simbol = "📥"
@@ -121,7 +123,8 @@ LIMIT 10
     else:
        simbol = "📤"
 
-    teks += f"""\n{simbol} {kategori}
+    teks += f"""\n 🆔 ID: {id_transaksi}
+{simbol} {kategori}
 📝 {keterangan}
 💰 {format_rupiah(abs(jumlah))}
 📅 {tanggal}

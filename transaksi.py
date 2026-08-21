@@ -213,14 +213,12 @@ def edit(user_id="CLI"):
 
     print("DATA BERHASIL DIUBAH!")
 
-
-def hapus_data(user_id="CLI"):
+def konfirmasi_data(user_id, id_hapus):
     try:
-        id_hapus = int(input("Masukkan Id : "))
+        id_hapus = int(id_hapus)
 
     except ValueError:
-        print("INPUT BERUPA ANGKA!")
-        return
+        return "Input berupa angka!!"
 
     cursor.execute("""
         SELECT *
@@ -231,23 +229,52 @@ def hapus_data(user_id="CLI"):
     data = cursor.fetchone()
 
     if data is None:
-        print("DATA TIDAK DITEMUKAN")
-        return
+        return f"❌ Transaksi dengan ID {id_hapus} tidak ditemukan."
 
-    tampilkan_menu(data)
+    cursor.execute("""
+DELETE FROM transaksi_keuangan
+WHERE id = ? AND user_id = ?
+""", (id_hapus, user_id))
 
-    konfirmasi = input("YAKIN INGIN MENGHAPUS? (y/n) : ")
+    conn.commit()
 
-    if konfirmasi.upper() == "Y":
+    return f"""🗑️ TRANSAKSI BERHASIL DIHAPUS
 
-        cursor.execute("""
-            DELETE FROM transaksi_keuangan
-            WHERE id = ? AND user_id = ?
-        """, (id_hapus, user_id))
+🆔 ID         : {data[0]}
+📁 Kategori   : {data[2]}
+📝 Keterangan : {data[3]}
+💰 Jumlah     : {format_rupiah(abs(data[5]))}
+📅 Tanggal    : {data[6]}
+"""
 
-        conn.commit()
+def hapus_data(user_id, id_hapus):
+    try:
+        id_hapus = int(id_hapus)
 
-        print("DATA BERHASIL DIHAPUS")
+    except ValueError:
+        return "Input berupa angka!!"
 
-    else:
-        print("DATA BATAL DIHAPUS")
+    cursor.execute("""
+        SELECT *
+        FROM transaksi_keuangan
+        WHERE id = ? AND user_id = ?
+    """, (id_hapus, user_id))
+
+    data = cursor.fetchone()
+
+    if data is None:
+        return f"❌ Transaksi dengan ID {id_hapus} tidak ditemukan."
+
+    return f"""⚠️ KONFIRMASI HAPUS
+
+🆔 ID         : {data[0]}
+📁 Kategori   : {data[2]}
+📝 Keterangan : {data[3]}
+💰 Jumlah     : {format_rupiah(abs(data[5]))}
+📅 Tanggal    : {data[6]}
+
+Yakin ingin menghapus??
+👉 YA {id_hapus}
+atau
+👉 TIDAK {id_hapus}
+"""

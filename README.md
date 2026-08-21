@@ -113,8 +113,13 @@ Aplikasi ini dibuat sebagai sarana belajar dan pengembangan kemampuan dalam:
 Version 1.2
 Proyek masih dalam tahap pengembangan yang akan dikembangkan lebih lanjut
 
-🔮 Rencana Pengembangan
- - Integrasi dengan sistem lain
+ ## Update saat ini
+ Menghubungkan proyek ini dengan whatsapp sebagai
+ UI(user interface) agar memudahkan pengguna
+ awam menggunakan sistem ini
+
+ 🔮 Rencana Pengembangan
+ - Memasukkan fitur yang ada sebelumnya ke dalam sistem yang telah dihubungkan ke whaatsapp
  - Memberikan UI/UX yang lebih praktis dan modern
 
 👨‍💻 Author
