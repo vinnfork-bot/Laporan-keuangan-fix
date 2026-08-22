@@ -3,6 +3,7 @@ from laporan import ambil_saldo, ambil_riwayat
 from config import *
 from utils import format_rupiah
 from database import cursor
+from cari_transaksi import *
 
 def parse_pesan(pesan, user_id):
     pesan = pesan.lower().strip()
@@ -17,6 +18,7 @@ def parse_pesan(pesan, user_id):
       -Riwayat
       -Tambah
       -Hapus
+      -Filter
       """
     if pesan == "saldo":
       saldo = ambil_saldo(user_id)
@@ -27,6 +29,20 @@ def parse_pesan(pesan, user_id):
     if pesan == "riwayat":
       return ambil_riwayat(user_id)
 
+    if pesan.startswith("filter"):
+      bagian = pesan.split()
+      
+      if len(bagian) != 2:
+        return "Format salah \nContoh :\nfilter makan"
+
+      filters = {}
+
+      for item in bagian[1:]:
+        key, value = item.split("=", 1)
+        filters[key.lower()] = value
+
+      return cari_transaksi(user_id, filters)
+    
     if pesan.startswith("hapus"):
       bagian = pesan.split()
 

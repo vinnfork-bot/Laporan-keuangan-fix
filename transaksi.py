@@ -112,17 +112,24 @@ def simpan_data():
 
 
 def format_data(rows):
+    teks = "filter"
     data = []
 
     for row in rows:
-        data.append([
-            row[0],
-            row[1],
-            row[2],
-            row[3],
-            format_rupiah(abs(row[4])),
-            row[5]
-        ])
+        id_transaksi = row[0]
+        kategori = row[2]
+        keterangan = row[3]
+        jumlah = row[5]
+        tanggal = row[6]
+    
+       
+    
+        teks += f"""\n 🆔 ID: {id_transaksi} 
+    🧲  {kategori}
+    📝 {keterangan}
+    💰 {format_rupiah(abs(jumlah))}
+    📅 {tanggal}
+    """   
 
     return data
 

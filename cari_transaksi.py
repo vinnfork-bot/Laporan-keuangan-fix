@@ -1,36 +1,49 @@
 from database import *
-from transaksi import format_data
 from tabulate import tabulate
-from config import HEADER_TABEL
 from datetime import datetime
-from utils import header
-from transaksi import format_data
+from utils import format_rupiah
 
-def cari_transaksi():
-   header("CARI TRANSAKSI")
+
+def format_hasil_filter(rows):
+   if not rows:
+    return "Tidak ada transaksi yang cocok dengan filter."
+
+   teks = "HASIL FILTER"
+   for row in rows:
+    teks += f"""\n
+🆔 ID: {row[0]}
+📁 Kategori: {row[3]}
+📝 {row[4]}
+💰 {format_rupiah(row[5])}
+📅 {row[6]}"""
+
+   return teks
+
+def cari_transaksi(user_id, filters):
    
    query = """
 SELECT *
-FROM transaksi
+FROM transaksi_keuangan
+WHERE user_id = ?
 """
 
-   filters = []
-   values = []
+   kondisi = []
+   values = [user_id]
 
-   kategori = input("MASUKKAN KATEGORI : ")
-   keterangan = input("MASUKKAN KETERANGAN : ")
-   tanggal = input("MASUKKAN TANGGAL, BULAN, DAN TAHUN : ")
+   kategori = filters.get("kategori")
+   keterangan = filters.get("keterangan")
+   tanggal = filters.get("tanggal")
 
    if not (kategori or keterangan or tanggal):
     print("Minimal isi satu filter")
     return
 
    if kategori:
-    filters.append("LOWER(kategori) = LOWER(?)")
+    kondisi.append("LOWER(kategori) = LOWER(?)")
     values.append(kategori)
 
    if keterangan:
-    filters.append("keterangan LIKE ?")
+    kondisi.append("keterangan LIKE ?")
     values.append(f"%{keterangan}%")
 
    if tanggal:
@@ -38,19 +51,15 @@ FROM transaksi
         tanggal, 
         "%d-%m-%Y"
        ).strftime("%Y-%m-%d")
-    filters.append("tanggal = ?")
+    kondisi.append("tanggal = ?")
     values.append(tanggal)
 
-   query += " WHERE " + " AND ".join(filters)
+   query += " AND " + " AND ".join(kondisi)
    query += " ORDER BY tanggal DESC, id DESC"
    cursor.execute(query, values)
 
    hasil = cursor.fetchall()
-   data = format_data(hasil)
-
-   print(tabulate(
-    data,
-    headers= HEADER_TABEL,
-    tablefmt="grid"
-   ))
-
+   data = format_hasil_filter(hasil)
+   print("QUERY:", query)
+   print("VALUES:", values)
+   return data
