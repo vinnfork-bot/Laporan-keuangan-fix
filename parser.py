@@ -1,9 +1,10 @@
-from transaksi import simpan_transaksi, hapus_data, tampilkan_data, konfirmasi_data
+from transaksi import simpan_transaksi, hapus_data, tampilkan_data, konfirmasi_data, edit_data
 from laporan import ambil_saldo, ambil_riwayat
 from config import *
 from utils import format_rupiah
 from database import cursor
 from cari_transaksi import *
+from export_excel import export
 
 def parse_pesan(pesan, user_id):
     pesan = pesan.lower().strip()
@@ -19,6 +20,8 @@ def parse_pesan(pesan, user_id):
       -Tambah
       -Hapus
       -Filter
+      -Edit 
+      -Export 
       """
     if pesan == "saldo":
       saldo = ambil_saldo(user_id)
@@ -29,6 +32,61 @@ def parse_pesan(pesan, user_id):
     if pesan == "riwayat":
       return ambil_riwayat(user_id)
 
+    if pesan.startswith("export"):
+      bagian = pesan.split()
+
+      if len(bagian) != 3:
+        return "Format salah\ncontoh : \nexport 8 2026"
+
+      try:
+        bulan = int(bagian[1])
+      except ValueError:
+        return "bulan dan tahun harus berupa angka\ncontoh : \nexport 8 2026"
+
+      tahun = bagian[2]
+
+      if bulan < 1 or bulan > 12:
+        return "bulan harus 1-12"
+
+      return export(user_id, bulan, tahun)
+
+    if pesan.startswith("edit"):
+      bagian = pesan.split()
+
+      if len(bagian) < 4:
+        return "Format salah\nContoh: edit 2 makan bakso 15000"
+
+      id_edit = bagian[1]
+      kategori_input = bagian[2]
+
+      try:
+        jumlah = int(bagian[-1])
+      except ValueError:
+        return "Jumlah harus berupa angka."
+
+      keterangan = " ".join(bagian[3:-1])
+      kategori = None
+      jenis = None
+
+      for nama in KATEGORI_MASUK.values():
+        if kategori_input == nama.lower():
+          kategori = nama
+          jenis = JENIS_MASUK
+          jumlah = abs(jumlah)
+          break
+
+      for nama in KATEGORI_KELUAR.values():
+        if kategori_input == nama.lower():
+          kategori = nama
+          jenis = JENIS_KELUAR
+          jumlah = -abs(jumlah)
+          break
+
+      if kategori is None:
+        return "Kategori tidak ditemukan."
+
+      return edit_data(user_id, id_edit, jenis, kategori, keterangan, jumlah)
+    
     if pesan.startswith("filter"):
       bagian = pesan.split()
       

@@ -285,3 +285,40 @@ Yakin ingin menghapus??
 atau
 👉 TIDAK {id_hapus}
 """
+
+def edit_data(user_id, id_edit, jenis, kategori, keterangan, jumlah):
+    try:
+        id_edit = int(id_edit)
+    except ValueError:
+        return "Input ID harus berupa angka."
+
+    cursor.execute("""
+            SELECT *
+            FROM transaksi_keuangan
+            WHERE id = ? AND user_id = ?
+        """, (id_edit, user_id))
+
+    data = cursor.fetchone()
+
+    if data is None:
+        return f"❌ Data transaksi tidak ditemukan"
+
+    cursor.execute("""
+            UPDATE transaksi_keuangan
+            SET jenis = ?,
+                kategori = ?,
+                keterangan = ?,
+                jumlah = ?
+            WHERE id = ?
+              AND user_id = ?
+        """, (
+            jenis,
+            kategori,
+            keterangan,
+            jumlah,
+            id_edit,
+            user_id
+        ))
+    
+    conn.commit()
+    return f"✅ Transaksi dengan ID {id_edit} berhasil diubah."

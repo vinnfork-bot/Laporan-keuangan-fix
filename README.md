@@ -116,9 +116,12 @@ Proyek masih dalam tahap pengembangan yang akan dikembangkan lebih lanjut
  ## Update saat ini
  Menghubungkan proyek ini dengan whatsapp sebagai
  UI(user interface) agar memudahkan pengguna
- awam menggunakan sistem ini.
+ awam menggunakan sistem ini. ✅
 
- Menambahkan fitur hapus dan filter transaksi
+ Menambahkan fitur hapus dan filter transaksi ✅
+
+ menambahkan fitur edit transaksi dan export ke bentuk excel ✅
+
 
  🔮 Rencana Pengembangan
  - Memasukkan fitur yang ada sebelumnya ke dalam sistem yang telah dihubungkan ke whaatsapp
