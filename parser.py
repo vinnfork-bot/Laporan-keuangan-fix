@@ -5,6 +5,7 @@ from utils import format_rupiah
 from database import cursor
 from cari_transaksi import *
 from export_excel import export
+from backup import *
 
 def parse_pesan(pesan, user_id):
     pesan = pesan.lower().strip()
@@ -21,7 +22,9 @@ def parse_pesan(pesan, user_id):
       -Hapus
       -Filter
       -Edit 
-      -Export 
+      -Export
+      -Backup
+      -Restore
       """
     if pesan == "saldo":
       saldo = ambil_saldo(user_id)
@@ -31,6 +34,17 @@ def parse_pesan(pesan, user_id):
 """
     if pesan == "riwayat":
       return ambil_riwayat(user_id)
+
+    if pesan.startswith("backup"):
+      return backup_wa(user_id)
+
+    if pesan.startswith("restore"):
+      bagian = pesan.split()
+
+      if len(bagian) != 3 or bagian[2] != "ya":
+        return "Format salah\nContoh: restore BACKUP_DATA_2026-08-24.db ya"
+
+      return restore_wa(user_id, bagian[1], bagian[2])
 
     if pesan.startswith("export"):
       bagian = pesan.split()

@@ -9,6 +9,7 @@ __pycache__/
 
 # Backup
 backup/
+backup data/
 
 # File hasil export
 export/

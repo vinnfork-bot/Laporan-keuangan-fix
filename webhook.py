@@ -8,14 +8,15 @@ VERIFY_TOKEN = "WBbth-27122009-11122008"
 
 PHONE_NUMBER_ID = "1261514473711832"
 
-ACCESS_TOKEN = "EAAWDjwt7MzEBSUpeip5CgizZCgeAPqJVdb46ytzJxLtbbyrLUE5AFAmWZB6WrDM6UNDVdDCjT3jCeuKPiWUaZBNUUOuJzz3TLJshROZBkU1KrEgZCfQemD0hkLdzXjpmr3BOQi9CgfljCI5vlwZCQpjJIGtyUJamdHA7jGKl9n7iEalTxg0oPMyZCok00ZBFFVb2TSim6OqWWI3copxP62kLhng9zg6IbNE3sZC2q1rA1NODUKZC4Iw8SovUCLy7RRTEWyR7uZCh2rG8tWexlOCpfdXFQZDZD"
+ACCESS_TOKEN = "token kamu"
+ACCESS_TOKEN_B = "token kamu"
 
 def kirim_pesan(nomor, pesan):
 
     url = f"https://graph.facebook.com/v25.0/1261514473711832/messages"
 
     headers = {
-        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Authorization": f"Bearer {ACCESS_TOKEN or ACCESS_TOKEN_B}",
         "Content-Type": "application/json"
     }
 

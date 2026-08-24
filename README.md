@@ -121,10 +121,11 @@ Proyek masih dalam tahap pengembangan yang akan dikembangkan lebih lanjut
  Menambahkan fitur hapus dan filter transaksi ✅
 
  menambahkan fitur edit transaksi dan export ke bentuk excel ✅
-
+ membuat fitur keamanan data(backup dan restore) ✅
+ test prototype multi user ✅
 
  🔮 Rencana Pengembangan
- - Memasukkan fitur yang ada sebelumnya ke dalam sistem yang telah dihubungkan ke whaatsapp
+ - Membuat aplikasi ini menjadi multiuser yang dapat diakses siapa saja
  - Memberikan UI/UX yang lebih praktis dan modern
 
 👨‍💻 Author
