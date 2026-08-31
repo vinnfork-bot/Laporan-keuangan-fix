@@ -1,6 +1,9 @@
 DATABASE_NAME = "transaksi_keuangan.db"
 TABLE_NAME = "Transaksi"
 
+ACCESS_TOKEN = "EAAWDjwt7MzEBSWlkKlvLI0fWW6BqZBRD8g2jx2k1A21JrNnU76oeW7R92dwntqc9ZBkS3qFjIgjEmCB9yXGC0LVdvRCyHyxXTelC6Idx7cBK33ugpoMpPYtd8D9OGdFtPZAYXdPynBaFnk3Jij9ONDCbZBYTeRDA5McowqZCWNY65fhPENEn2ZCPP1zqtVxhg9I6oJZAMNKNnAnxeBZAkijW28sanhQbHiIcy99895pPFZAXLIiXEXcJp7ZCzqZA1QeD7MGLjZAdXAZBDRlqLPRUMa4go"
+PHONE_NUMBER_ID = "1261514473711832"
+
 HEADER_TABEL = [
     "ID",
     "JENIS",
@@ -23,10 +26,11 @@ KATEGORI_MASUK = {
 
 KATEGORI_KELUAR = {
     "1" : "Makan",
-    "2" : "Transportasi",
-    "3" : "Kuota",
-    "4" : "Beli",
-    "5" : "Lainnya"
+    "2" : "Minum",
+    "3" : "Transportasi",
+    "4" : "Kuota",
+    "5" : "Beli",
+    "6" : "Lainnya"
 }
 
 WARNA_MASUK = "C6E0B4"

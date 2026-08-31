@@ -6,8 +6,10 @@ from database import cursor
 from cari_transaksi import *
 from export_excel import export
 from backup import *
+import os
 
 def parse_pesan(pesan, user_id):
+    from webhook import upload_file, kirim
     pesan = pesan.lower().strip()
 
     if pesan == "hai":
@@ -32,7 +34,7 @@ def parse_pesan(pesan, user_id):
       Saldo anda saat ini : 
       {format_rupiah(saldo)}
 """
-    if pesan == "riwayat":
+    if pesan.startswith("riwayat"):
       return ambil_riwayat(user_id)
 
     if pesan.startswith("backup"):
@@ -62,7 +64,22 @@ def parse_pesan(pesan, user_id):
       if bulan < 1 or bulan > 12:
         return "bulan harus 1-12"
 
-      return export(user_id, bulan, tahun)
+      # Export the Excel file
+      export_result = export(user_id, bulan, tahun)
+      
+      # Build filename the same way export() does
+      bulan_formatted = f"{int(bulan):02d}"
+      nama_file = os.path.join("export", f"{bulan_formatted}-{tahun}.xlsx")
+      
+      # Upload file and get media_id
+      media_id = upload_file(nama_file)
+      
+      if media_id:
+        # Send file via WhatsApp (user_id is the phone number from webhook)
+        kirim(user_id, media_id, os.path.basename(nama_file), user_id)
+        return export_result
+      else:
+        return "Gagal mengupload file"
 
     if pesan.startswith("edit"):
       bagian = pesan.split()
@@ -104,14 +121,21 @@ def parse_pesan(pesan, user_id):
     if pesan.startswith("filter"):
       bagian = pesan.split()
       
-      if len(bagian) != 2:
-        return "Format salah \nContoh :\nfilter makan"
+      if len(bagian) < 2:
+        return "Format salah \nContoh :\nfilter kategori=makan\natau\nfilter makan"
 
       filters = {}
 
-      for item in bagian[1:]:
-        key, value = item.split("=", 1)
-        filters[key.lower()] = value
+      # If only one argument and no "=", treat it as kategori filter
+      if len(bagian) == 2 and "=" not in bagian[1]:
+        filters["kategori"] = bagian[1]
+      else:
+        # Otherwise expect key=value format
+        for item in bagian[1:]:
+          if "=" not in item:
+            return "Format salah \nGunakan: filter key=value\nContoh: filter kategori=makan"
+          key, value = item.split("=", 1)
+          filters[key.lower()] = value
 
       return cari_transaksi(user_id, filters)
     
@@ -152,6 +176,7 @@ def parse_pesan(pesan, user_id):
 
 📤 PENGELUARAN
 - makan
+- Minum
 - transportasi
 - kuota
 - lainnya

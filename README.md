@@ -99,7 +99,8 @@ Aplikasi menyediakan fitur Backup dan Restore untuk
 menjaga keamanan data transaksi pengguna
 
 🎯 Tujuan Project
-Aplikasi ini dibuat sebagai sarana belajar dan pengembangan kemampuan dalam:
+Version 2.0
+Proyek ini adalah portofolio pertama saya yang menunjukkan kemampuan saya dalam :
  - Python
  - Sqlite
  - Function dan modular programing
@@ -108,12 +109,10 @@ Aplikasi ini dibuat sebagai sarana belajar dan pengembangan kemampuan dalam:
  - Git dan github
  - Export ke excel
  - Problem solving
+ - Whatsapp API
 
 📌 Status Project
-Version 1.2
-Proyek masih dalam tahap pengembangan yang akan dikembangkan lebih lanjut
-
- ## Update saat ini
+ ## Final Version
  Menghubungkan proyek ini dengan whatsapp sebagai
  UI(user interface) agar memudahkan pengguna
  awam menggunakan sistem ini. ✅
@@ -124,9 +123,8 @@ Proyek masih dalam tahap pengembangan yang akan dikembangkan lebih lanjut
  membuat fitur keamanan data(backup dan restore) ✅
  test prototype multi user ✅
 
- 🔮 Rencana Pengembangan
- - Membuat aplikasi ini menjadi multiuser yang dapat diakses siapa saja
- - Memberikan UI/UX yang lebih praktis dan modern
+ Membuat fitur export ke excel mengirimkan
+ file ke user lewat whatsapp  ✅
 
 👨‍💻 Author
 Alvin

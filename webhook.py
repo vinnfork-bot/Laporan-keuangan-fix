@@ -2,21 +2,18 @@ from flask import Flask, request
 import requests
 from parser import parse_pesan
 import traceback
+from config import ACCESS_TOKEN, PHONE_NUMBER_ID
+from export_excel import *
 
 app = Flask(__name__)
 VERIFY_TOKEN = "WBbth-27122009-11122008"
-
-PHONE_NUMBER_ID = "1261514473711832"
-
-ACCESS_TOKEN = "token kamu"
-ACCESS_TOKEN_B = "token kamu"
 
 def kirim_pesan(nomor, pesan):
 
     url = f"https://graph.facebook.com/v25.0/1261514473711832/messages"
 
     headers = {
-        "Authorization": f"Bearer {ACCESS_TOKEN or ACCESS_TOKEN_B}",
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
 
@@ -37,6 +34,91 @@ def kirim_pesan(nomor, pesan):
 
     print("Status   :", response.status_code)
     print("Response :", response.text)
+
+def upload_file(file_path):
+    url = f"https://graph.facebook.com/v25.0/{PHONE_NUMBER_ID}/media"
+
+    print("UPLOAD URL :", url)
+
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
+    }
+
+    mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+    try:
+        with open(file_path, "rb") as file:
+            files = {
+                "file": (
+                    file_path.split("\\")[-1],
+                    file,
+                    mime_type,
+                )
+            }
+            data = {
+                "messaging_product": "whatsapp"
+            }
+
+            response = requests.post(
+                url,
+                headers=headers,
+                files=files,
+                data=data,
+                timeout=30
+            )
+
+        print("UP STATUS : ", response.status_code)
+        print("UPLOAD RESPONSE :", response.text)
+
+        if response.status_code not in (200, 201):
+            return None
+
+        hasil = response.json()
+        media_id = hasil.get("id")
+
+        if not media_id:
+            print("UPLOAD GAGAL: response tidak punya id", hasil)
+            return None
+
+        return media_id
+
+    except FileNotFoundError:
+        print("file tidak ada ", file_path)
+        return None
+
+    except Exception as e:
+        print("error upload : ", e)
+        traceback.print_exc()
+        return None
+
+def kirim(user_id, media_id, nama_file, nomor):
+    url = f"https://graph.facebook.com/v25.0/{PHONE_NUMBER_ID}/messages"
+
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": nomor,
+        "type": "document",
+        "document": {
+            "id": media_id,
+            "filename": nama_file,
+            "caption": "📊 rekap transaksi"
+        }
+    }
+
+    response = requests.post(
+        url,
+        headers = headers,
+        json = payload
+    )
+    print("KIRIM FILE STATUS   :", response.status_code)
+    print("KIRIM FILE RESPONSE :", response.text)
+    return response
+    
 
 @app.route("/webhook", methods=["GET", "POST"])
 def webhook():
@@ -85,8 +167,15 @@ def webhook():
     return "EVENT DITERIMA", 200
 
 if __name__ == "__main__":
+
+    file_path = "export\\08-2026.xlsx"
+
+    media_id = upload_file(file_path)
+
+    print("MEDIA ID :", media_id)
+
     app.run(
         host="0.0.0.0",
         port=5000,
         debug=True
-        )
+    )
